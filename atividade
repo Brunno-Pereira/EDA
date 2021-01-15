@@ -1,0 +1,230 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Diagnostics;
+
+namespace atv {
+    public class atvEDA {
+
+        public enum genero {
+            masculino, feminino
+        }
+
+        public class cadastro {
+            public genero gen;
+            public string nome;
+            public string estado;
+
+            public float peso;
+            public int altura, idade;
+            public bool casado, temFilhos, empregado;
+        }
+
+        public static string[] homens = { "Brunno  ", "Carlos  ", "Rodrigo ", "Rogerio ", "Mateus  ", "Nildson ", "Jiren   ", "Abraao  " };
+        public static string[] mulheres = { "Brunna  ", "Bianca  ", "Joana   ", "Elny    ", "Leticia ", "Larissa ", "Sara    ", "Vanessa " };
+
+        public static string[] estado = { "BA ", "DF ", "MA ", "RJ ", "SP ", "PA ", "PR", "RS" };
+
+        static void Main() {
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            Console.WriteLine("Lista de cadastros do Banco De Dados Nacional.\n");
+
+            Random r = new Random();
+            int numero = r.Next(0, 1000);
+            int aux = numero;
+            int instrucoes = 2;
+
+            cadastro[] cadastros = new cadastro[1000];
+
+            instrucoes += 6;
+
+            for (int i = 0; i < 1000; i++) {
+                cadastros[i] = new cadastro();
+
+                instrucoes++;
+            }
+
+            for (int i = 0; i < 1000; i++) {
+
+                if (aux % 9 == 0) {
+                    cadastros[i].gen = genero.masculino;
+                } else if (aux % 7 == 0) {
+                    cadastros[i].gen = genero.masculino;
+                } else if (aux % 5 == 0) {
+                    cadastros[i].gen = genero.masculino;
+                } else {
+                    cadastros[i].gen = genero.feminino;
+                }
+
+                aux++;
+
+                instrucoes += 2;
+            }
+
+            for (int i = 0; i < 1000; i++) {
+                int aux2 = aux % 10;
+                instrucoes++;
+
+                if (aux2 > 6) {
+
+                    int index = 6;
+                    if (aux2 % 2 == 0) {
+                        index++;
+
+                        instrucoes++;
+                    }
+
+                    if (cadastros[i].gen == genero.feminino) {
+                        cadastros[i].nome = mulheres[index];
+                    } else {
+                        cadastros[i].nome = homens[index];
+                    }
+
+                    instrucoes++;
+                } else if (aux2 > 4) {
+                    int index = 4;
+                    if (aux2 % 2 == 0) {
+                        index++;
+                        instrucoes++;
+                    }
+
+                    if (cadastros[i].gen == genero.feminino) {
+                        cadastros[i].nome = mulheres[index];
+                    } else {
+                        cadastros[i].nome = homens[index];
+                    }
+
+                    instrucoes += 2;
+                } else if (aux2 > 2) {
+                    int index = 2;
+                    if (aux2 % 2 == 0) {
+                        index++;
+                        instrucoes++;
+                    }
+
+                    if (cadastros[i].gen == genero.feminino) {
+                        cadastros[i].nome = mulheres[index];
+                    } else {
+                        cadastros[i].nome = homens[index];
+                    }
+
+                    instrucoes += 2;
+                } else {
+                    int index = 0;
+
+                    if (aux % 3 == 0) {
+                        index = 0;
+                        instrucoes++;
+                    } else if (aux % 3 == 1) {
+                        index = 1;
+                        instrucoes++;
+                    } else {
+                        index = 2;
+                        instrucoes++;
+                    }
+
+                    if (cadastros[i].gen == genero.feminino) {
+                        cadastros[i].nome = mulheres[index];
+                    } else {
+                        cadastros[i].nome = homens[index];
+                    }
+                    instrucoes += 2;
+
+                }
+
+                aux += 6;
+                instrucoes++;
+            }
+
+            for (int i = 0; i < 1000; i++) {
+                cadastros[i].altura = cadastros[i].idade + 59;
+                instrucoes++;
+            }
+
+            int a = 0;
+            instrucoes++;
+            while (a < 1000) {
+                int index = aux % 7;
+                cadastros[a].estado = estado[index];
+
+                aux += 6;
+                a++;
+                instrucoes += 4;
+            }
+
+            for (int i = 0; i < 1000; i++) {
+                cadastros[i].idade = (aux % 60) + 16;
+
+                aux += 9;
+                instrucoes += 2;
+            }
+
+            aux = numero;
+            a = 0;
+            instrucoes += 2;
+            while (a < 1000) {
+                cadastros[a].casado = (aux % 3 != 0);
+                aux++;
+                a++;
+                instrucoes += 3;
+            }
+
+            a = 0;
+            instrucoes++;
+            while (a < 1000) {
+                cadastros[a].temFilhos = cadastros[a].casado && (aux % 2 == 0);
+                aux++;
+                a++;
+                instrucoes += 3;
+            }
+
+            aux = numero;
+            a = 0;
+            instrucoes += 2;
+            while (a < 1000) {
+                cadastros[a].empregado = aux % 10 > 6;
+
+                a++;
+                instrucoes += 2;
+            }
+
+            for (int i = 0; i < 1000; i++) {
+                cadastros[i].peso = cadastros[i].idade * 2;
+                cadastros[i].peso /= (i / 1000);
+
+                instrucoes += 2;
+            }
+
+
+            Console.Write("\n");
+
+            sw.Stop();
+            float timer = sw.ElapsedMilliseconds / 1000;
+
+            a = 0;
+            while (a < 1000) {
+                cadastro psoa = cadastros[a];
+                string stringue = psoa.nome + ". Estado " + psoa.estado + ". " + psoa.idade + " anos, " + psoa.altura + "cm.";
+                
+                if (psoa.casado) {
+                    stringue += " Casado(a).";
+                }   if (psoa.temFilhos) {
+                    stringue += ". Com filhos";
+                }   if (psoa.empregado) {
+                    stringue += ". Trabalhando";
+                }
+
+                Console.WriteLine(stringue);
+                a++;
+            }
+
+            Console.WriteLine("\nTempo de execucao: " + timer);
+            Console.Write("Instrucoes totais executadas: " + instrucoes);
+        }
+
+    }
+
+}
